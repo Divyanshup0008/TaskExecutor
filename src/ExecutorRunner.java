@@ -14,14 +14,14 @@ public class ExecutorRunner {
                         taskGroup,
                         Main.TaskType.READ,
                         () -> {
-                            Thread.sleep(1000); // Simulate work
+                            Thread.sleep(1000);
                             return "Task Completed!";
                         }
                 )
         );
 
         try {
-            String result = future.get(); // Blocks until the task completes
+            String result = future.get();
             System.out.println("Task Result: " + result);
         } catch (Exception e) {
             e.printStackTrace();
