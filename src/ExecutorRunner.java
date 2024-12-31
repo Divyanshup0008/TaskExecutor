@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
 public class ExecutorRunner {
@@ -19,6 +20,7 @@ public class ExecutorRunner {
 
         // Create and submit random tasks
         List<Future<String>> futures = new ArrayList<>();
+        CountDownLatch latch = new CountDownLatch(numTasks); // Latch to track task completion
         Random random = new Random();
         for (int i = 0; i < numTasks; i++) {
             Main.TaskGroup taskGroup = taskGroups.get(random.nextInt(taskGroups.size()));
@@ -43,6 +45,7 @@ public class ExecutorRunner {
         // Wait for all tasks to complete and print their results
         for (Future<String> future : futures) {
             try {
+                latch.await(); // Wait for all tasks to finish
                 System.out.println(future.get());
             } catch (Exception e) {
                 e.printStackTrace();

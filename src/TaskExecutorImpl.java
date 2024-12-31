@@ -24,10 +24,13 @@ public class TaskExecutorImpl implements Main.TaskExecutor {
 
         Callable<T> wrappedTask = () -> {
             Semaphore groupLock = taskGroupLocks.computeIfAbsent(task.taskGroup().groupUUID(), key -> new Semaphore(1));
+            System.out.println("Task " + task.taskUUID() + " waiting for group " + task.taskGroup().groupUUID());
             groupLock.acquire();
             try {
+                System.out.println("Task " + task.taskUUID() + " running for group " + task.taskGroup().groupUUID());
                 return task.taskAction().call();
             } finally {
+                System.out.println("Task " + task.taskUUID() + " finished for group " + task.taskGroup().groupUUID());
                 groupLock.release();
             }
         };
